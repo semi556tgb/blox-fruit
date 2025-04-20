@@ -1,45 +1,31 @@
--- islands.lua | Detect Sea and Return Islands
+-- hitbox.lua
 
-local Islands = {}
+local Hitbox = {}
 
-function Islands.GetCurrentSea()
-    local player = game.Players.LocalPlayer
-    local placeId = game.PlaceId
-
-    if placeId == 2753915549 then  -- Sea 1
-        return 1
-    elseif placeId == 4442272183 then  -- Sea 2
-        return 2
-    elseif placeId == 7449423635 then  -- Sea 3
-        return 3
-    else
-        return 0  -- Unknown
+function Hitbox:Apply(size)
+    for _, v in ipairs(game:GetService("Players"):GetPlayers()) do
+        if v ~= game.Players.LocalPlayer and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
+            local root = v.Character.HumanoidRootPart
+            pcall(function()
+                root.Size = Vector3.new(size, size, size)
+                root.Transparency = 0.7
+                root.Material = Enum.Material.ForceField
+            end)
+        end
     end
 end
 
-function Islands.GetIslands()
-    local sea = Islands.GetCurrentSea()
-
-    if sea == 1 then
-        return {
-            "Starter Island",
-            "Jungle",
-            "Pirate Village",
-            "Desert",
-            "Middle Town",
-            "Frozen Village",
-            "Marine Fortress",
-            "Skylands",
-            "Colosseum",
-            "Prison",
-            "Magma Village",
-            "Underwater City",
-            "Fountain City",
-            "Haunted Ship"
-        }
-    else
-        return {}  -- if not Sea 1, return empty list
+function Hitbox:Reset()
+    for _, v in ipairs(game:GetService("Players"):GetPlayers()) do
+        if v ~= game.Players.LocalPlayer and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
+            local root = v.Character.HumanoidRootPart
+            pcall(function()
+                root.Size = Vector3.new(2, 2, 1) -- default size
+                root.Transparency = 1
+                root.Material = Enum.Material.Plastic
+            end)
+        end
     end
 end
 
-return Islands
+return Hitbox
